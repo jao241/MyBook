@@ -1,21 +1,31 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
 
-export default function App() {
+import { StatusBar } from "react-native";
+import { MenuProvider } from "react-native-popup-menu";
+
+import { createAppContainer } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
+
+import Feeds from './src/screens/Feeds';
+import Details from "./src/screens/Details";
+import Comments from "./src/screens/Comments";
+
+const Navigator = createStackNavigator({
+  Feeds: {screen: Feeds},
+  Details: {screen: Details},
+  Comments: {screen: Comments}
+},
+{
+  headerMode: 'none'
+});
+
+const Container = createAppContainer(Navigator);
+
+export default function App(){
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <MenuProvider>
+      <StatusBar></StatusBar>
+      <Container></Container>
+    </MenuProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
