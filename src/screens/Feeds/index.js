@@ -7,7 +7,9 @@ import feedsEstaticos from '../../assets/dicionarios/feeds.json';
 import FeedCard from "../../components/FeedCard";
 import { 
     EntradaNomeProduto,
-    CentralizarItens
+    CentralizarItens,
+    HeaderText,
+    CaixaLupa
  } from "../../assets/style/styles"
 import Icon from 'react-native-vector-icons/AntDesign';
 
@@ -58,12 +60,17 @@ export default class Feeds extends React.Component{
     mostrarBarraPesquisa = () =>{
         return(
             <CentralizarItens>
-                <Text>MyBook</Text>
+                <HeaderText>
+                    <Text>MyBook</Text>
+                </HeaderText>
                 <EntradaNomeProduto
                 onChangeText={(nome) =>{
                     this.atualizarNome(nome);
                 }}></EntradaNomeProduto>
-                <Icon size={20} name="search1" style={{padding: 8}} color={'white'}></Icon>
+                <CaixaLupa>
+                <Icon size={20} name="search1" color={'white'}></Icon>
+
+                </CaixaLupa>
             </CentralizarItens>
         );
     }

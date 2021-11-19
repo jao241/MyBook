@@ -1,10 +1,11 @@
 import React from "react";
-import { Text, View } from "react-native";
-import { Header } from "react-native-elements";
+import { Text, View, Modal, TextInput } from "react-native";
+import { Header, Button } from "react-native-elements";
 import { FlatList } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import ComentariosEstaticos from "../../assets/dicionarios/comentarios.json";
 import { Card, CardContent } from "react-native-cards";
+import { CaixaAdicionarComentario, HeaderText } from "../../assets/style/styles";
 
 export default class Comments extends React.Component{
     constructor(props){
@@ -13,12 +14,60 @@ export default class Comments extends React.Component{
         this.state={
             feed: this.props.navigation.state.params.feed,
             feedId: this.props.navigation.state.params.feedId,
+            visibilidadeModalAdicionarComentario: false
         }
     }
     
 
     componentDidMount = () =>{
         this.carregarComentarios()
+    }
+
+    mudarVisibilidade = () =>{
+        const { visibilidadeModalAdicionarComentario } = this.state;
+        this.setState({
+            visibilidadeModalAdicionarComentario: !visibilidadeModalAdicionarComentario
+        });
+    }
+    modalComentario = () =>{
+        return(
+                    <Modal
+                    animationType="fade"
+                    transparent={true}
+                >          
+                    <TextInput
+                        multiline
+                        editable
+                        placeholder={"Digite um comentário!"}
+                        maxLength={100}
+                    >
+                    </TextInput>             
+                    <Button
+                            icon={
+                                <Icon size={22} name="check" color="#fff"/>
+                            }
+                            title="Comentar"
+                            type="outline"
+                            onPress={
+                                ()=>{
+                                    //
+                                }
+                            }
+                        />
+                        <Button
+                            icon={
+                                <Icon size={22} name="closecircle" color="#fff"/>
+                            }
+                            title="Fechar"
+                            type="outline"
+                            onPress={
+                                ()=>{
+                                    this.mudarVisibilidade();
+                                }
+                            }
+                        />
+                </Modal>    
+        );
     }
 
     criarCabecalho = () =>{
@@ -31,9 +80,16 @@ export default class Comments extends React.Component{
                         }
                     }></Icon>
                 }
-                centerComponent={<Text>MyBook</Text>
+                centerComponent={
+                    <HeaderText>
+                        <Text>MyBook</Text>
+                    </HeaderText>
                 }
-                rightComponent={<></>}
+                rightComponent={<Icon color={'white'} size={28} name="pluscircleo" onPress={
+                    ()=>{
+                        this.mudarVisibilidade();
+                    }
+                }></Icon>}
                 backgroundColor={'rgba(125, 49, 201, 0.9)'}
             ></Header>
         );
@@ -67,7 +123,6 @@ export default class Comments extends React.Component{
 
     exibirComentarios = () =>{
         const comentarios = this.carregarComentarios();
-        this.criarCabecalho();
         return(
             <FlatList
                 data={comentarios}
@@ -85,10 +140,13 @@ export default class Comments extends React.Component{
     }  
 
     render = () =>{
+        const { visibilidadeModalAdicionarComentario } = this.state;
+        console.log(visibilidadeModalAdicionarComentario)
         return(
             <View>
                 {this.criarCabecalho()}
                 {this.exibirComentarios()}
+                {visibilidadeModalAdicionarComentario && this.modalComentario()}
             </View>
             );
     }

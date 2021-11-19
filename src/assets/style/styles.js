@@ -44,10 +44,25 @@ export const EntradaNomeProduto = styled.TextInput`
     border-width: 1px;
     border-radius: 8px;
     padding: 10px;
+    margin: 0 10px;
+`;
+
+export const CaixaLupa = styled.Text`
+    background-color: grey;        
+    border-radius: 10px;
+    padding: 5px;    
 `;
 
 export const CentralizarItens = styled.View`
     flexDirection: row;
     justify-content: center;
     align-items: center;
+`;
+
+export const HeaderText = styled.Text`
+    color: #fff;
+`;
+
+export const CaixaAdicionarComentario = styled.Modal`
+    width: 10px;
 `;

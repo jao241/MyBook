@@ -3,6 +3,8 @@ import { Text } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import DetailsCard from "../../components/DetailsCard";
 import { Header } from "react-native-elements";
+import { Card } from "react-native-elements/dist/card/Card";
+import { HeaderText } from "../../assets/style/styles";
 
 export default class Details extends React.Component{
 
@@ -42,12 +44,16 @@ export default class Details extends React.Component{
                             }
                         }></Icon>
                     }
-                    centerComponent={<Text>MyBook</Text>
+                    centerComponent={
+                        <HeaderText>
+                            <Text>MyBook</Text>
+                        </HeaderText>
                     }
                     rightComponent={<></>}
                     backgroundColor={'rgba(125, 49, 201, 0.9)'}
                 ></Header>
                 <DetailsCard feed={feed}/>
+                <Card>
                 <Icon name="message1" size={18} onPress={
                             ()=>{
                                 this.props.navigation.navigate("Comments", 
@@ -56,6 +62,7 @@ export default class Details extends React.Component{
                                 });
                             }
                         }></Icon>
+                </Card>
             </>
         );
     }
