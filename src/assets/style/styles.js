@@ -63,6 +63,8 @@ export const HeaderText = styled.Text`
     color: #fff;
 `;
 
-export const CaixaAdicionarComentario = styled.Modal`
-    width: 10px;
+export const NovoComentario = styled.View`
+    margin-top: 300px;
+    align-self: center;
+    width: 80%;
 `;
