@@ -5,7 +5,7 @@ import { FlatList } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import ComentariosEstaticos from "../../assets/dicionarios/comentarios.json";
 import { Card, CardContent } from "react-native-cards";
-import { CaixaAdicionarComentario, HeaderText } from "../../assets/style/styles";
+import { NovoComentario, HeaderText } from "../../assets/style/styles";
 
 export default class Comments extends React.Component{
     constructor(props){
@@ -14,7 +14,9 @@ export default class Comments extends React.Component{
         this.state={
             feed: this.props.navigation.state.params.feed,
             feedId: this.props.navigation.state.params.feedId,
-            visibilidadeModalAdicionarComentario: false
+            visibilidadeModalAdicionarComentario: false,
+            comentarios: [],
+            textoComentario: ""
         }
     }
     
@@ -29,17 +31,48 @@ export default class Comments extends React.Component{
             visibilidadeModalAdicionarComentario: !visibilidadeModalAdicionarComentario
         });
     }
+    adicionarComentario = () =>{
+        const { feedId, textoComentario, comentarios } = this.state;
+        const comentario = [
+            {
+                "user":{
+                    "name": "Joao"
+                },
+                "id": comentarios.length + 1,
+                "feed": feedId,
+                "datetime": "2019-01-01T12:00-0500",
+                "content": textoComentario
+            }
+        ];
+        this.setState({
+            comentarios: [...comentario, ...comentarios]
+        });
+        this.mudarVisibilidade();
+    }
+
+    atualizarComentario = (texto) =>{
+        this.setState({
+            textoComentario: texto
+        });
+    }
+
     modalComentario = () =>{
         return(
-                    <Modal
-                    animationType="fade"
-                    transparent={true}
-                >          
+            <Modal
+            animationType="fade"
+            transparent={false}
+            >          
+                <NovoComentario>
                     <TextInput
                         multiline
                         editable
                         placeholder={"Digite um comentário!"}
                         maxLength={100}
+                        onChangeText={
+                            (texto)=>{
+                                this.atualizarComentario(texto);
+                            }
+                        }
                     >
                     </TextInput>             
                     <Button
@@ -47,10 +80,10 @@ export default class Comments extends React.Component{
                                 <Icon size={22} name="check" color="#fff"/>
                             }
                             title="Comentar"
-                            type="outline"
+                            type="solid"
                             onPress={
                                 ()=>{
-                                    //
+                                    this.adicionarComentario();
                                 }
                             }
                         />
@@ -58,15 +91,16 @@ export default class Comments extends React.Component{
                             icon={
                                 <Icon size={22} name="closecircle" color="#fff"/>
                             }
-                            title="Fechar"
-                            type="outline"
+                            title=" Fechar"
+                            type="solid"
                             onPress={
                                 ()=>{
                                     this.mudarVisibilidade();
                                 }
                             }
                         />
-                </Modal>    
+                </NovoComentario>
+        </Modal>    
         );
     }
 
@@ -113,16 +147,18 @@ export default class Comments extends React.Component{
     }
 
     carregarComentarios = () =>{
-        const { feed } = this.state;
+        const { feed, comentarios } = this.state;
         const todosComentarios = ComentariosEstaticos.comentarios;
-        const comentarios = todosComentarios.filter((itens)=>{
+        const comentariosSelecionados = todosComentarios.filter((itens)=>{
             return itens.feed == feed._id;
         });
-        return comentarios;
+        this.setState({
+            comentarios: [ ...comentariosSelecionados ]
+        });
     }
 
     exibirComentarios = () =>{
-        const comentarios = this.carregarComentarios();
+        const {comentarios} = this.state;
         return(
             <FlatList
                 data={comentarios}
