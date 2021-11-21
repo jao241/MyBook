@@ -3,14 +3,14 @@ import React from "react";
 import { Header } from "react-native-elements";
 import { Text, FlatList, View } from 'react-native';
 import { TouchableOpacity } from "react-native-gesture-handler";
-import feedsEstaticos from '../../assets/dicionarios/feeds.json';
+import feedsEstaticos from '../../assets/dicionarios/feed.json';
 import FeedCard from "../../components/FeedCard";
 import { 
     EntradaNomeProduto,
     CentralizarItens,
     HeaderText,
     CaixaLupa
- } from "../../assets/style/styles"
+} from "../../assets/style/styles"
 import Icon from 'react-native-vector-icons/AntDesign';
 
 const FEEDS_POR_PAGINA = 2;
@@ -22,11 +22,12 @@ export default class Feeds extends React.Component{
         
         this.state={
             nomeProduto:null,
-            feed: null
+            feed: []
         }
     }
 
     estruturarFeed = (feed) =>{
+        console.log(feed.produto.nome)
         return(
             <TouchableOpacity onPress={
                 ()=>{
@@ -38,18 +39,6 @@ export default class Feeds extends React.Component{
         );
     }
 
-    filtrarItens = () =>{
-        const { feed, nomeProduto } = this.state;
-        if(nomeProduto){
-            const feedFiltrado = feedsEstaticos.feeds.filter(
-                (item)=>{
-                    return item.product.name.toLowerCase().includes(nomeProduto.toLowerCase());
-            });
-            return feedFiltrado;
-        }else{
-            return feed;
-        }
-    }
 
     atualizarNome = (nome) =>{
         this.setState({
@@ -69,14 +58,26 @@ export default class Feeds extends React.Component{
                 }}></EntradaNomeProduto>
                 <CaixaLupa>
                 <Icon size={20} name="search1" color={'white'}></Icon>
-
                 </CaixaLupa>
             </CentralizarItens>
         );
     }
 
+    filtrarItens = () =>{
+        const { feed, nomeProduto } = this.state;
+        if(nomeProduto){
+            const feedFiltrado = feedsEstaticos.feeds.filter(
+                (item)=>{
+                    return item.produto.nome.toLowerCase().includes(nomeProduto.toLowerCase());
+            });
+            return feedFiltrado;
+        }else{
+            return feed;
+        }
+    }
+
     exibirItens = () =>{
-        const feed = this.filtrarItens();
+            const feed = this.filtrarItens();
         return(
             <View>
                 <Header
@@ -107,13 +108,12 @@ export default class Feeds extends React.Component{
     buscarItems = () =>{
         const feeds = feedsEstaticos.feeds;
         this.setState({
-            feed: feeds
+            feed: [...feeds]
         });
     }
 
     componentDidMount = () =>{
         this.buscarItems();
-        this.exibirItens();
     }
 
     render = () =>{    

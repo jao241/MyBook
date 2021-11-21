@@ -1,10 +1,24 @@
 import React from "react";
 import { Text } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
-import DetailsCard from "../../components/DetailsCard";
 import { Header } from "react-native-elements";
-import { Card } from "react-native-elements/dist/card/Card";
-import { HeaderText } from "../../assets/style/styles";
+import { CardImage, CardContent } from "react-native-cards";
+import produto from '../../assets/images/produto2.jpeg';
+import { 
+    Caixa,
+    HeaderText, 
+    DescricaoProduto, 
+    Espaco, 
+    Imagen, 
+    Likes, 
+    NomeEmpresa, 
+    NomeProduto, 
+    PrecoProduto, 
+    CentralizarItens,
+    EspacoHorizontal
+} from "../../assets/style/styles";
+import Toast from "react-native-simple-toast";
+
 
 export default class Details extends React.Component{
 
@@ -13,27 +27,40 @@ export default class Details extends React.Component{
 
         this.state={
             feedId: this.props.navigation.state.params.feedId,
-            feed: this.props.navigation.state.params.feed
+            feed: this.props.navigation.state.params.feed,
+            like: false
         }
     }
-/*
-    carregarFeed = () =>{
-        const { feedId } = this.state;
-        const feeds = feedsEstaticos.feeds;
-        const feed = feeds.filter((item)=>{
-            return item._id === feedId;
-        });
-        this.setState({
-            feed: feed[0] 
-        });
-    }
-*/
+    
     componentDidMount = () =>{
         //this.carregarFeed();
     }
+    adicionarLike = () =>{
+        const { feed } = this.state;
+        feed.like++;
+        this.setState({
+            feed: feed,
+            like: true
+        },
+        ()=>{
+            Toast.show("Obrigada pela avaliação!", Toast.LONG);
+        });
+    }
+
+    removerLike = () =>{
+        const { feed } = this.state;
+        feed.like--;
+        this.setState({
+            feed: feed,
+            like: false
+        },
+        ()=>{
+            Toast.show("Like removido!", Toast.LONG);
+        });
+    }
 
     render = () =>{
-        const { feed } = this.state;
+        const { feed, like } = this.state;
         return(
             <>
                <Header
@@ -49,20 +76,52 @@ export default class Details extends React.Component{
                             <Text>MyBook</Text>
                         </HeaderText>
                     }
-                    rightComponent={<></>}
+                    rightComponent={
+                        <>
+                        {like && <Icon size={30} name="heart" color="#ff0000" onPress={
+                            ()=>{
+                                this.removerLike();
+                            }
+                        }/>}
+                        {!like && <Icon size={30} name="hearto" color="#ff0000" onPress={
+                            ()=>{
+                                this.adicionarLike();
+                            }
+                        }/>}
+                        </>
+                    }
                     backgroundColor={'rgba(125, 49, 201, 0.9)'}
                 ></Header>
-                <DetailsCard feed={feed}/>
-                <Card>
-                <Icon name="message1" size={18} onPress={
-                            ()=>{
-                                this.props.navigation.navigate("Comments", 
-                                {feedId: this.state.feedId,
-                                feed: this.state.feed
-                                });
-                            }
-                        }></Icon>
-                </Card>
+                <Caixa>
+                    <Espaco/>
+                    <CardContent>
+                        <Imagen>
+                            <CardImage source={produto}/>
+                        </Imagen>
+                        <NomeProduto>{feed.produto.nome}</NomeProduto>
+                        <NomeEmpresa>{feed.produto.fabricante}</NomeEmpresa>
+                        <Espaco/>
+                        <DescricaoProduto>{feed.produto.descricao}</DescricaoProduto>
+                        <Espaco/>
+                        <PrecoProduto>R$ {feed.produto.preco}</PrecoProduto>
+                        <Espaco/>
+                        <CentralizarItens>
+                            <Icon name="heart" size={18} color={'#ff0000'}>
+                                <Likes>{feed.like}</Likes>
+                            </Icon>  
+                            <EspacoHorizontal/>
+                            <Icon name="message1" size={18} onPress={
+                                    ()=>{
+                                        this.props.navigation.navigate("Comments", 
+                                        {feedId: this.state.feedId,
+                                        feed: this.state.feed
+                                        });
+                                    }
+                                }>
+                            </Icon>     
+                        </CentralizarItens>                                             
+                    </CardContent>                    
+                </Caixa>
             </>
         );
     }

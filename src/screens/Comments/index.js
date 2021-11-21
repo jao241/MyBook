@@ -1,11 +1,13 @@
 import React from "react";
-import { Text, View, Modal, TextInput } from "react-native";
+import { Text, View, Modal, TextInput, Alert } from "react-native";
 import { Header, Button } from "react-native-elements";
 import { FlatList } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import ComentariosEstaticos from "../../assets/dicionarios/comentarios.json";
 import { Card, CardContent } from "react-native-cards";
-import { NovoComentario, HeaderText } from "../../assets/style/styles";
+import { NovoComentario, HeaderText, ContainerBotao, Espaco } from "../../assets/style/styles";
+import Swipeable from "react-native-swipeable-row";
+import Toast from "react-native-simple-toast"
 
 export default class Comments extends React.Component{
     constructor(props){
@@ -45,8 +47,9 @@ export default class Comments extends React.Component{
             }
         ];
         this.setState({
-            comentarios: [...comentario, ...comentarios]
-        });
+            comentarios: [...comentario, ...comentarios],
+            textoComentario: ""
+        }, Toast.show("Comentário adicionado!", Toast.LONG));
         this.mudarVisibilidade();
     }
 
@@ -60,7 +63,7 @@ export default class Comments extends React.Component{
         return(
             <Modal
             animationType="fade"
-            transparent={false}
+            transparent={true}
             >          
                 <NovoComentario>
                     <TextInput
@@ -74,31 +77,37 @@ export default class Comments extends React.Component{
                             }
                         }
                     >
-                    </TextInput>             
-                    <Button
-                            icon={
-                                <Icon size={22} name="check" color="#fff"/>
-                            }
-                            title="Comentar"
-                            type="solid"
-                            onPress={
-                                ()=>{
-                                    this.adicionarComentario();
-                                }
-                            }
-                        />
+                    </TextInput>    
+                    <Espaco/>         
+                    <ContainerBotao>
                         <Button
-                            icon={
-                                <Icon size={22} name="closecircle" color="#fff"/>
-                            }
-                            title=" Fechar"
-                            type="solid"
-                            onPress={
-                                ()=>{
-                                    this.mudarVisibilidade();
+                                icon={
+                                    <Icon size={22} name="check" color="#fff"/>
                                 }
-                            }
-                        />
+                                title="Comentar"
+                                type="solid"
+                                onPress={
+                                    ()=>{
+                                        this.adicionarComentario();
+                                    }
+                                }
+                            />
+                    </ContainerBotao>
+                    <Espaco/>
+                        <ContainerBotao>
+                            <Button
+                                icon={
+                                    <Icon size={22} name="closecircle" color="#fff"/>
+                                }
+                                title=" Fechar"
+                                type="solid"
+                                onPress={
+                                    ()=>{
+                                        this.mudarVisibilidade();
+                                    }
+                                }
+                            />
+                        </ContainerBotao>
                 </NovoComentario>
         </Modal>    
         );
@@ -129,20 +138,60 @@ export default class Comments extends React.Component{
         );
     }
 
+    removerComentario = (comentario) =>{
+        const { comentarios } = this.state;
+        const comentariosFiltrados = comentarios.filter((item)=>{
+            return item._id !== comentario._id;
+        });
+        this.setState({
+            comentarios: comentariosFiltrados
+        }, Toast.show("Comentário removido!", Toast.LONG));
+    }
+
+    confirmarRemocao = (comentario) =>{
+        Alert.alert(
+            null,
+            "Remover o seu comentário?",
+            [
+                {text: "NÃO", style: "cancel"},
+                {text: "SIM", onPress: ()=>{
+                    this.removerComentario(comentario);
+                }}
+            ]
+        )
+    }
+
     estruturarComentario = (comentario) =>{
         return(
-            <Card>
-                <CardContent>
-                    <Text>
-                        {comentario.user.name}
-                    </Text>
-                </CardContent>
-                <CardContent>
-                    <Text>
-                        {comentario.content}
-                    </Text>
-                </CardContent>
-            </Card>
+            <Swipeable
+                rightButtonWidth={50}
+                rightButtons={[
+                    <View>
+                        <Icon name="delete" color="#030303" size={28} onPress={
+                            ()=>{
+                                this.confirmarRemocao(comentario);
+                            }
+                        }/>
+                    </View>
+                    ]
+                }
+            >
+                <Card>
+                    <Espaco/>
+                    <CardContent>
+                        <Text>
+                            {comentario.user.name}
+                        </Text>
+                    </CardContent>
+                    <Espaco/>
+                    <CardContent>
+                        <Text>
+                            {comentario.content}
+                        </Text>
+                    </CardContent>
+                    <Espaco/>
+                </Card> 
+            </Swipeable>
         );
     }
 

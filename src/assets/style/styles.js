@@ -64,7 +64,32 @@ export const HeaderText = styled.Text`
 `;
 
 export const NovoComentario = styled.View`
-    margin-top: 300px;
+    background-color: rgba(125, 49, 201, 0.5);
+    margin-top: 350px;
     align-self: center;
+    align-items: center;
     width: 80%;
+    padding: 10px;
+    border-radius: 5px;
+`;
+
+export const Caixa = styled.View`
+    width: 100%;
+    height: 82%;
+`;
+
+export const Imagen = styled.View`
+    height: 35%;
+`;
+
+export const Espaco = styled.Text`
+    margin: 2px 0;
+`;
+ 
+export const EspacoHorizontal = styled.Text`
+    margin: 0 5px;
+`;
+
+export const ContainerBotao = styled.View`
+    width: 50%;
 `;

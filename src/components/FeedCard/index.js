@@ -1,9 +1,14 @@
 import React from "react";
 import { Card, CardContent, CardImage} from 'react-native-cards';
-import { Avatar, NomeEmpresa, NomeProduto, DescricaoProduto, PrecoProduto, Likes, CentralizarItens } from '../../assets/style/styles'
+import { 
+    NomeProduto,
+    PrecoProduto,
+    Likes,
+    CentralizarItens, 
+    Espaco
+} from '../../assets/style/styles'
 import Icon from 'react-native-vector-icons/AntDesign';
-import avatar from '../../assets/images/avatar.jpeg';
-import produto from '../../assets/images/produto.jpeg';
+import produto from '../../assets/images/produto2.jpeg';
 
 export default class FeedCard extends React.Component{
     constructor(props){
@@ -17,25 +22,21 @@ export default class FeedCard extends React.Component{
         const { feed }  = this.state;
         return(
             <Card>
+                <Espaco/>
                 <CardImage source={produto}/>
                 <CardContent>
-                    <Avatar source={avatar}/>
-                    <NomeEmpresa>{feed.company.name}</NomeEmpresa>
-                    <NomeProduto>{feed.product.name}</NomeProduto>
+                    <NomeProduto>{feed.produto.nome}</NomeProduto>
                 </CardContent>
                 <CardContent>
-                    <DescricaoProduto>{feed.product.description}</DescricaoProduto>
-                </CardContent>
-                <CardContent>
-                    <PrecoProduto>{`R$ ${feed.product.price}`}</PrecoProduto>                    
+                    <PrecoProduto>{`R$ ${feed.produto.preco}`}</PrecoProduto>                    
                 </CardContent>
                 <CardContent>
                     <CentralizarItens>
                         <Icon name="heart" size={18} color={'#ff0000'}></Icon>
-                        <Likes>{feed.likes}</Likes>
+                        <Likes>{feed.like}</Likes>
                     </CentralizarItens>
                 </CardContent>
-        </Card>
+            </Card>
         );
     }
 }
