@@ -27,7 +27,6 @@ export default class Feeds extends React.Component{
     }
 
     estruturarFeed = (feed) =>{
-        console.log(feed.produto.nome)
         return(
             <TouchableOpacity onPress={
                 ()=>{
@@ -119,120 +118,6 @@ export default class Feeds extends React.Component{
     render = () =>{    
         return(
             this.exibirItens()
-        );
+        );  
     }
-
-
- /*
-       constructor(props){
-        super(props);
-        this.state = {
-            proximaPagina: 0,
-            feeds: [],
-            carregando:false
-        };
-    }
-
-    carregarFeeds = () =>{
-        const { proximaPagina, feeds } = this.state;
-
-        this.setState({
-            carregando: true
-        });
-
-        const idInicial = proximaPagina * FEEDS_POR_PAGINA + 1;
-        const idFinal = idInicial + FEEDS_POR_PAGINA -1;
-        
-        const content = feedsEstaticos.feeds.filter((feed)=> feed._id >= idInicial && feed._id <= idFinal);
-        if(content.length){
-            console.log(`Adicionando ${content.length} feeds.`);
-            
-            this.setState({
-                proximaPagina: proximaPagina + 1,
-                feeds: [...feeds, ...content],
-                carregando: false
-            });
-        }else{
-            this.setState({
-                carregando: false
-            });
-        }
-    }
-
-    componentDidMount = () =>{
-        this.carregarMaisFeeds();
-    }
-
-    carregarMaisFeeds = () =>{
-        const { carregando } = this.state;
-
-        if(carregando){
-            return;
-        }
-
-        this.carregarFeeds();
-    }
-
-    mostrarFeed = (feed) =>{
-        console.log("Cheguei no mostrarFeed");
-        return(
-            <TouchableOpacity>
-                <Card>
-                    <CardImage source={produto}/>
-                    <CardContent>
-                        <Avatar source={avatar}/>
-                        <NomeEmpresa>{feed.company.name}</NomeEmpresa>
-                    </CardContent>
-                    <CardContent>
-                        <NomeProduto>{feed.product.name}</NomeProduto>
-                    </CardContent>
-                    <CardContent>
-                        <DescricaoProduto>{feed.product.description}</DescricaoProduto>
-                    </CardContent>
-                    <CardContent>
-                        <PrecoProduto>{`R$ ${feed.product.price}`}</PrecoProduto>
-                        <Icon name="heart" size={18}>
-                            <Likes>{feed.likes}</Likes>
-                        </Icon>
-                    </CardContent>
-                </Card>
-            </TouchableOpacity>
-        );
-    }
-
-    mostrarFeeds = (feeds) =>{
-        console.log("Cheguei no mostarFeeds");
-        <FlatList
-            data={feeds}
-            numColumns={2}
-            onEndReached={()=> this.carregarMaisFeeds()}
-            onEndReachedThreshold={0.1}
-            keyExtractor={(item)=> String(item._id)}
-            renderItem={({item})=>{
-                return(
-                    <View style={{width: '50%'}}>
-                        {this.mostrarFeed(item.item)}
-                    </View>
-                );
-            }}
-        >
-
-        </FlatList>
-    }
-
-    render = () =>{
-        const { feeds } = this.state;
-
-        if(feeds.length){
-            console.log(`Exibindo ${feeds.length} feeds.`);
-            return(
-                this.mostrarFeeds(feeds)
-            );
-        }else{
-            return(
-                <View></View>
-            );
-        }
-    }
- */
 }

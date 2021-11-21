@@ -233,7 +233,6 @@ export default class Comments extends React.Component{
 
     render = () =>{
         const { visibilidadeModalAdicionarComentario } = this.state;
-        console.log(visibilidadeModalAdicionarComentario)
         return(
             <View>
                 {this.criarCabecalho()}
