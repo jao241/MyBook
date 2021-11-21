@@ -25,6 +25,7 @@ export default class Comments extends React.Component{
 
     componentDidMount = () =>{
         this.carregarComentarios()
+        this.exibirComentarios()
     }
 
     mudarVisibilidade = () =>{
@@ -76,6 +77,7 @@ export default class Comments extends React.Component{
                                 this.atualizarComentario(texto);
                             }
                         }
+                        style={{backgroundColor: "white", borderRadius: 2, padding: 10}}
                     >
                     </TextInput>    
                     <Espaco/>         
@@ -187,6 +189,11 @@ export default class Comments extends React.Component{
                     <CardContent>
                         <Text>
                             {comentario.content}
+                        </Text>
+                    </CardContent>
+                    <CardContent>
+                        <Text>
+                            {comentario.datetime}
                         </Text>
                     </CardContent>
                     <Espaco/>
