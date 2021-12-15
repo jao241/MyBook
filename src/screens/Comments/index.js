@@ -7,7 +7,9 @@ import { Card, CardContent } from "react-native-cards";
 import { NovoComentario, HeaderText, ContainerBotao, Espaco } from "../../assets/style/styles";
 import Swipeable from "react-native-swipeable-row";
 import Toast from "react-native-simple-toast"
-import commentsApi from "../../service/commentsApi";
+import commentsApi from "../../services/commentsApi";
+import removeCommentsApi from "../../services/removeCommentsApi";
+import addCommentsApi from "../../services/addCommentApi";
 
 export default class Comments extends React.Component{
     constructor(props){
@@ -33,21 +35,20 @@ export default class Comments extends React.Component{
             visibilidadeModalAdicionarComentario: !visibilidadeModalAdicionarComentario
         });
     }
-    adicionarComentario = () =>{
+    
+    adicionarComentario = async() =>{
         const { feedId, textoComentario, comentarios } = this.state;
-        const comentario = [
-            {
-                "user":{
-                    "name": "Joao"
-                },
+        const comentario = {
                 "id": comentarios.length + 1,
-                "feed": feedId,
+                "feed_id": feedId,
+                "usuario":"João",
                 "datetime": "2019-01-01T12:00-0500",
-                "content": textoComentario
+                "conteudo": textoComentario
             }
-        ];
+        ;
+        const response = await addCommentsApi.post("add_comentario", comentario);
+        this.carregarComentarios();
         this.setState({
-            comentarios: [...comentario, ...comentarios],
             textoComentario: ""
         }, Toast.show("Comentário adicionado!", Toast.LONG));
         this.mudarVisibilidade();
@@ -139,24 +140,20 @@ export default class Comments extends React.Component{
         );
     }
 
-    removerComentario = (comentario) =>{
-        const { comentarios } = this.state;
-        const comentariosFiltrados = comentarios.filter((item)=>{
-            return item._id !== comentario._id;
-        });
-        this.setState({
-            comentarios: comentariosFiltrados
-        }, Toast.show("Comentário removido!", Toast.LONG));
+    removerComentario = async(comentario_id) =>{
+        const response = await removeCommentsApi.delete(`remove_comentario/${comentario_id}`);
+        this.carregarComentarios();
+        Toast.show("Comentário removido!", Toast.LONG);
     }
 
-    confirmarRemocao = (comentario) =>{
+    confirmarRemocao = (comentario_id) =>{
         Alert.alert(
             null,
             "Remover o seu comentário?",
             [
                 {text: "NÃO", style: "cancel"},
                 {text: "SIM", onPress: ()=>{
-                    this.removerComentario(comentario);
+                    this.removerComentario(comentario_id);
                 }}
             ]
         )
@@ -170,7 +167,7 @@ export default class Comments extends React.Component{
                     <View>
                         <Icon name="delete" color="#030303" size={28} onPress={
                             ()=>{
-                                this.confirmarRemocao(comentario);
+                                this.confirmarRemocao(comentario.id);
                             }
                         }/>
                     </View>
@@ -201,20 +198,20 @@ export default class Comments extends React.Component{
         );
     }
 
-    carregarComentarios = () =>{
+    carregarComentarios = async() =>{
         const { feedId } = this.state;
-        const response = commentsApi.get(`comentarios/${feedId}`);
+        const response = await commentsApi.get(`comentarios/${feedId}`);
         this.setState({
             comentarios: [...response.data]
         });
-        console.log(this.state.comentarios);
     }
 
     exibirComentarios = () =>{
         const {comentarios} = this.state;
+        const comentariosListReverted = comentarios.reverse();
         return(
             <FlatList
-                data={comentarios}
+                data={comentariosListReverted}
                 numColumns={1}
                 keyExtractor={(item)=> String(item.id)}
                 renderItem={({item})=>{

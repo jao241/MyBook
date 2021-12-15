@@ -18,8 +18,9 @@ import {
     EspacoHorizontal
 } from "../../assets/style/styles";
 import Toast from "react-native-simple-toast";
-import descriptionApi from "../../service/descriptionApi";
-import addLikeApi from "../../service/addLikeApi";
+import descriptionApi from "../../services/descriptionApi";
+import addLikeApi from "../../services/addLikeApi";
+import removeLikeApi from "../../services/removeLikeApi";
 
 
 export default class Details extends React.Component{
@@ -46,18 +47,10 @@ export default class Details extends React.Component{
         });
     }
 
-    adicionarLike = async() =>{
-        const { feed } = this.state;
-        const dataJson = JSON.stringify(feed.id);
-        const response = await addLikeApi.get('add_like',
-        {
-            method: "PATCH",
-            headers: {"Content-Type": "application/json"},
-            data: dataJson
-        });
-        console.log(response.data)
+    adicionarLike = async(id) =>{
+        const response = await addLikeApi.patch(`add_like/${id}`);
+        this.getFeed();
         this.setState({
-            feed: feed,
             like: true
         },
         ()=>{
@@ -65,11 +58,10 @@ export default class Details extends React.Component{
         });
     }
 
-    removerLike = () =>{
-        const { feed } = this.state;
-        feed.like--;
+    removerLike = async(id) =>{
+        const response = await removeLikeApi.patch(`remove_like/${id}`);
+        this.getFeed();
         this.setState({
-            feed: feed,
             like: false
         },
         ()=>{
@@ -98,12 +90,12 @@ export default class Details extends React.Component{
                         <>
                         {like && <Icon size={30} name="heart" color="#ff0000" onPress={
                             ()=>{
-                                this.removerLike();
+                                this.removerLike(feed.id);
                             }
                         }/>}
                         {!like && <Icon size={30} name="hearto" color="#ff0000" onPress={
                             ()=>{
-                                this.adicionarLike();
+                                this.adicionarLike(feed.id);
                             }
                         }/>}
                         </>

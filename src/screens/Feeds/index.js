@@ -11,9 +11,7 @@ import {
     CaixaLupa
 } from "../../assets/style/styles"
 import Icon from 'react-native-vector-icons/AntDesign';
-import feedApi from '../../service/feedApi';
-
-const FEEDS_POR_PAGINA = 2;
+import feedApi from '../../services/feedApi';
 
 export default class Feeds extends React.Component{
     
@@ -87,7 +85,6 @@ export default class Feeds extends React.Component{
                     rightComponent={<></>}
                     backgroundColor={'rgba(125, 49, 201, 0.9)'}
                 >
-
                 </Header>
                 <FlatList
                 data={feed}
@@ -109,7 +106,7 @@ export default class Feeds extends React.Component{
             const response = await feedApi.get('/feeds');
             this.setState({
                 feed: response.data
-            })
+            });
         }catch(error){
             console.log(error);
         }
