@@ -25,15 +25,15 @@ export default class FeedCard extends React.Component{
                 <Espaco/>
                 <CardImage source={produto}/>
                 <CardContent>
-                    <NomeProduto>{feed.produto.nome}</NomeProduto>
+                    <NomeProduto>{feed.nome}</NomeProduto>
                 </CardContent>
                 <CardContent>
-                    <PrecoProduto>{`R$ ${feed.produto.preco}`}</PrecoProduto>                    
+                    <PrecoProduto>{`R$ ${feed.preco}`}</PrecoProduto>                    
                 </CardContent>
                 <CardContent>
                     <CentralizarItens>
                         <Icon name="heart" size={18} color={'#ff0000'}></Icon>
-                        <Likes>{feed.like}</Likes>
+                        <Likes>{feed.likes}</Likes>
                     </CentralizarItens>
                 </CardContent>
             </Card>

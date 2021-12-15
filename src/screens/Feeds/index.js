@@ -3,7 +3,6 @@ import React from "react";
 import { Header } from "react-native-elements";
 import { Text, FlatList, View } from 'react-native';
 import { TouchableOpacity } from "react-native-gesture-handler";
-import feedsEstaticos from '../../assets/dicionarios/feed.json';
 import FeedCard from "../../components/FeedCard";
 import { 
     EntradaNomeProduto,
@@ -12,6 +11,7 @@ import {
     CaixaLupa
 } from "../../assets/style/styles"
 import Icon from 'react-native-vector-icons/AntDesign';
+import feedApi from '../../service/feedApi';
 
 const FEEDS_POR_PAGINA = 2;
 
@@ -21,7 +21,7 @@ export default class Feeds extends React.Component{
         super(props);
         
         this.state={
-            nomeProduto:null,
+            nomeProduto:"",
             feed: []
         }
     }
@@ -30,7 +30,7 @@ export default class Feeds extends React.Component{
         return(
             <TouchableOpacity onPress={
                 ()=>{
-                    this.props.navigation.navigate("Details", {feedId: feed._id, feed: feed})
+                    this.props.navigation.navigate("Details", {feedId: feed.id})
                 }
             }>
                 <FeedCard feed={feed}/>
@@ -65,9 +65,9 @@ export default class Feeds extends React.Component{
     filtrarItens = () =>{
         const { feed, nomeProduto } = this.state;
         if(nomeProduto){
-            const feedFiltrado = feedsEstaticos.feeds.filter(
+            const feedFiltrado = feed.filter(
                 (item)=>{
-                    return item.produto.nome.toLowerCase().includes(nomeProduto.toLowerCase());
+                    return item.nome.toLowerCase().includes(nomeProduto.toLowerCase());
             });
             return feedFiltrado;
         }else{
@@ -92,7 +92,7 @@ export default class Feeds extends React.Component{
                 <FlatList
                 data={feed}
                 numColumns={1}
-                keyExtractor={(item)=> String(item._id)}
+                keyExtractor={(item)=> String(item.id)}
                 renderItem={({item})=>{
                     return(
                         <View style={{width: '100%'}}>
@@ -104,11 +104,15 @@ export default class Feeds extends React.Component{
         );
     }
 
-    buscarItems = () =>{
-        const feeds = feedsEstaticos.feeds;
-        this.setState({
-            feed: [...feeds]
-        });
+    buscarItems = async () =>{
+        try{
+            const response = await feedApi.get('/feeds');
+            this.setState({
+                feed: response.data
+            })
+        }catch(error){
+            console.log(error);
+        }
     }
 
     componentDidMount = () =>{

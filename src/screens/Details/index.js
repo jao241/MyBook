@@ -18,6 +18,8 @@ import {
     EspacoHorizontal
 } from "../../assets/style/styles";
 import Toast from "react-native-simple-toast";
+import descriptionApi from "../../service/descriptionApi";
+import addLikeApi from "../../service/addLikeApi";
 
 
 export default class Details extends React.Component{
@@ -27,17 +29,33 @@ export default class Details extends React.Component{
 
         this.state={
             feedId: this.props.navigation.state.params.feedId,
-            feed: this.props.navigation.state.params.feed,
+            feed: {},
             like: false
         }
     }
     
     componentDidMount = () =>{
-        //this.carregarFeed();
+        this.getFeed();
     }
-    adicionarLike = () =>{
+
+    getFeed = async() =>{
+        const id = this.state.feedId;
+        const response = await descriptionApi.get(`description_feed/${id}`);
+        this.setState({
+            feed: response.data
+        });
+    }
+
+    adicionarLike = async() =>{
         const { feed } = this.state;
-        feed.like++;
+        const dataJson = JSON.stringify(feed.id);
+        const response = await addLikeApi.get('add_like',
+        {
+            method: "PATCH",
+            headers: {"Content-Type": "application/json"},
+            data: dataJson
+        });
+        console.log(response.data)
         this.setState({
             feed: feed,
             like: true
@@ -98,23 +116,22 @@ export default class Details extends React.Component{
                         <Imagen>
                             <CardImage source={produto}/>
                         </Imagen>
-                        <NomeProduto>{feed.produto.nome}</NomeProduto>
-                        <NomeEmpresa>{feed.produto.fabricante}</NomeEmpresa>
+                        <NomeProduto>{feed.nome}</NomeProduto>
+                        <NomeEmpresa>{feed.fabricante}</NomeEmpresa>
                         <Espaco/>
-                        <DescricaoProduto>{feed.produto.descricao}</DescricaoProduto>
+                        <DescricaoProduto>{feed.descricao}</DescricaoProduto>
                         <Espaco/>
-                        <PrecoProduto>R$ {feed.produto.preco}</PrecoProduto>
+                        <PrecoProduto>R$ {feed.preco}</PrecoProduto>
                         <Espaco/>
                         <CentralizarItens>
                             <Icon name="heart" size={18} color={'#ff0000'}>
-                                <Likes>{feed.like}</Likes>
+                                <Likes>{feed.likes}</Likes>
                             </Icon>  
                             <EspacoHorizontal/>
                             <Icon name="message1" size={18} onPress={
                                     ()=>{
                                         this.props.navigation.navigate("Comments", 
-                                        {feedId: this.state.feedId,
-                                        feed: this.state.feed
+                                        {feedId: this.state.feedId
                                         });
                                     }
                                 }>

@@ -3,18 +3,17 @@ import { Text, View, Modal, TextInput, Alert } from "react-native";
 import { Header, Button } from "react-native-elements";
 import { FlatList } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
-import ComentariosEstaticos from "../../assets/dicionarios/comentarios.json";
 import { Card, CardContent } from "react-native-cards";
 import { NovoComentario, HeaderText, ContainerBotao, Espaco } from "../../assets/style/styles";
 import Swipeable from "react-native-swipeable-row";
 import Toast from "react-native-simple-toast"
+import commentsApi from "../../service/commentsApi";
 
 export default class Comments extends React.Component{
     constructor(props){
         super(props);
 
         this.state={
-            feed: this.props.navigation.state.params.feed,
             feedId: this.props.navigation.state.params.feedId,
             visibilidadeModalAdicionarComentario: false,
             comentarios: [],
@@ -182,13 +181,13 @@ export default class Comments extends React.Component{
                     <Espaco/>
                     <CardContent>
                         <Text>
-                            {comentario.user.name}
+                            {comentario.usuario}
                         </Text>
                     </CardContent>
                     <Espaco/>
                     <CardContent>
                         <Text>
-                            {comentario.content}
+                            {comentario.conteudo}
                         </Text>
                     </CardContent>
                     <CardContent>
@@ -203,14 +202,12 @@ export default class Comments extends React.Component{
     }
 
     carregarComentarios = () =>{
-        const { feed, comentarios } = this.state;
-        const todosComentarios = ComentariosEstaticos.comentarios;
-        const comentariosSelecionados = todosComentarios.filter((itens)=>{
-            return itens.feed == feed._id;
-        });
+        const { feedId } = this.state;
+        const response = commentsApi.get(`comentarios/${feedId}`);
         this.setState({
-            comentarios: [ ...comentariosSelecionados ]
+            comentarios: [...response.data]
         });
+        console.log(this.state.comentarios);
     }
 
     exibirComentarios = () =>{
@@ -219,7 +216,7 @@ export default class Comments extends React.Component{
             <FlatList
                 data={comentarios}
                 numColumns={1}
-                keyExtractor={(item)=> String(item._id)}
+                keyExtractor={(item)=> String(item.id)}
                 renderItem={({item})=>{
                     return(
                         <View>
