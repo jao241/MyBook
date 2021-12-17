@@ -103,7 +103,7 @@ export default class Feeds extends React.Component{
 
     buscarItems = async () =>{
         try{
-            const response = await feedApi.get('/feeds');
+            const response = await feedApi.get('feeds');
             this.setState({
                 feed: response.data
             });
