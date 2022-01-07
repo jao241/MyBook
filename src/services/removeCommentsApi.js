@@ -1,7 +1,8 @@
 import axios from "axios";
+import {HOST} from '@env';
 
 const removeCommentsApi = axios.create({
-    baseURL: "http://192.168.1.8:3005/"
+    baseURL: `http://${HOST}:3005/`
 });
 
 export default removeCommentsApi;

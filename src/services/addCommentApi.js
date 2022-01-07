@@ -1,7 +1,8 @@
 import axios from "axios";
+import {HOST} from '@env';
 
 const addCommentApi = axios.create({
-    baseURL: "http://192.168.1.8:3004/"
+    baseURL: `http://${HOST}:3004/`
 });
 
 export default addCommentApi;

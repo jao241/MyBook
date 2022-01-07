@@ -1,7 +1,8 @@
 import axios from "axios";
+import {HOST} from '@env';
 
 const removeLikeApi = axios.create({
-    baseURL: "http://192.168.1.8:3007/"
+    baseURL: `http://${HOST}:3007/`
 });
 
 export default removeLikeApi;

@@ -1,7 +1,8 @@
 import axios from "axios";
+import {HOST} from "@env";
 
 const descriptionApi = axios.create({
-    baseURL: "http://192.168.1.8:3002/"
+    baseURL: `http://${HOST}:3002/`
 });
 
 export default descriptionApi;
